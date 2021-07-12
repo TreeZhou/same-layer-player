@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>启用同层播放器并且不全屏播放</title>
+</head>
+<style>
+    .main {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        display: none;
+    }
+
+    .loading {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .loading__logo {
+        width: 30%;
+        position: absolute;
+        left: 35%;
+        bottom: 50%;
+    }
+
+    .btnPlay {
+        position: fixed;
+        width: 20%;
+        left: 40%;
+        top: 70%;
+    }
+
+    .btnPlay {
+        position: fixed;
+        width: 20%;
+        left: 40%;
+        top: 70%;
+    }
+
+    .btn {
+        position: fixed;
+        width: 20%;
+        left: 40%;
+        top: 70%;
+    }
+
+    .tip {
+        font-size: 20px;
+        color: black;
+        font-weight: 600;
+        position: fixed;
+        left: 25%;
+        top: 30%;
+        background-color: #fff;
+        width: 50%;
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="loading">
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwcHgiICBoZWlnaHQ9IjIwMHB4IiAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ieE1pZFlNaWQiIGNsYXNzPSJsZHMtYmFsbDIiIHN0eWxlPSJiYWNrZ3JvdW5kOiBub25lOyI+DQogIDxnIG5nLWF0dHItdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCx7e2NvbmZpZy5keX19KSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCwtNy41KSI+DQogICAgPGNpcmNsZSBjeD0iNTAiIG5nLWF0dHItY3k9Int7Y29uZmlnLmN5fX0iIHI9IjAuNzI1Njg4IiBuZy1hdHRyLWZpbGw9Int7Y29uZmlnLmMxfX0iIGN5PSI0MSIgZmlsbD0iI2U5OGMwYyIgdHJhbnNmb3JtPSJyb3RhdGUoMzQyLjM1NyA1MC4wMDAxIDUwLjAwMDEpIj4NCiAgICAgIDxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9InRyYW5zZm9ybSIgdHlwZT0icm90YXRlIiBjYWxjTW9kZT0ibGluZWFyIiB2YWx1ZXM9IjAgNTAgNTA7MzYwIDUwIDUwIiBrZXlUaW1lcz0iMDsxIiBkdXI9IjFzIiBiZWdpbj0iMHMiIHJlcGVhdENvdW50PSJpbmRlZmluaXRlIj48L2FuaW1hdGVUcmFuc2Zvcm0+DQogICAgICA8YW5pbWF0ZSBhdHRyaWJ1dGVOYW1lPSJyIiBjYWxjTW9kZT0ic3BsaW5lIiB2YWx1ZXM9IjA7MTU7MCIga2V5VGltZXM9IjA7MC41OzEiIGR1cj0iMSIga2V5U3BsaW5lcz0iMC4yIDAgMC44IDE7MC4yIDAgMC44IDEiIGJlZ2luPSIwcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiPjwvYW5pbWF0ZT4NCiAgICA8L2NpcmNsZT4NCiAgICA8Y2lyY2xlIGN4PSI1MCIgbmctYXR0ci1jeT0ie3tjb25maWcuY3l9fSIgcj0iMTQuMjc0MyIgbmctYXR0ci1maWxsPSJ7e2NvbmZpZy5jMn19IiBjeT0iNDEiIGZpbGw9IiNmZTcxOGQiIHRyYW5zZm9ybT0icm90YXRlKDUyMi4zNTcgNTAgNTApIj4NCiAgICAgIDxhbmltYXRlVHJhbnNmb3JtIGF0dHJpYnV0ZU5hbWU9InRyYW5zZm9ybSIgdHlwZT0icm90YXRlIiBjYWxjTW9kZT0ibGluZWFyIiB2YWx1ZXM9IjE4MCA1MCA1MDs1NDAgNTAgNTAiIGtleVRpbWVzPSIwOzEiIGR1cj0iMXMiIGJlZ2luPSIwcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiPjwvYW5pbWF0ZVRyYW5zZm9ybT4NCiAgICAgIDxhbmltYXRlIGF0dHJpYnV0ZU5hbWU9InIiIGNhbGNNb2RlPSJzcGxpbmUiIHZhbHVlcz0iMTU7MDsxNSIga2V5VGltZXM9IjA7MC41OzEiIGR1cj0iMSIga2V5U3BsaW5lcz0iMC4yIDAgMC44IDE7MC4yIDAgMC44IDEiIGJlZ2luPSIwcyIgcmVwZWF0Q291bnQ9ImluZGVmaW5pdGUiPjwvYW5pbWF0ZT4NCiAgICA8L2NpcmNsZT4NCiAgPC9nPg0KPC9zdmc+"
+            class="loading__logo">
+        <button class="btnPlay">播放视频</butto>
+    </div>
+    <div class="main" id="videoBox">
+        <button class="btn">点击按键</butto>
+            <div class="tip">启用同层播放器</br>兼容安卓和ios</br>非全屏播放</br>元素可以显示在视频上面</div>
+    </div>
+</body>
+
+<script src="./lib/jquery-3.1.1.min.js"></script>
+<script src="./lib/3.1-vconsole.min.js"></script>
+
+<script src="./lib/jsmpeg.min.js"></script>
+<script src="./lib/video.js"></script>
+<script>
+    try {
+        new VConsole();
+    } catch (e) {}
+</script>
+<script>
+    $(function () {
+        window.videoName = new Video("./lib/index.mp4", {
+            totalTime: 22,
+        });
+        $('#videoBox').prepend(videoName.domElement);
+        $('.btnPlay').click(function () {
+            videoName.play();
+            $('#videoBox').fadeIn(2000);
+        })
+        $('.btn').click(function () {
+            $('.tip').fadeIn(1000);
+            var timer = setTimeout(function () {
+                $('.tip').fadeOut(1000);
+                clearTimeout(timer);
+            }, 5000)
+        })
+        window.videoName.addEventListener("ended", function () {
+            $('#videoBox').fadeOut(2000);
+
+        })
+      
+    })
+</script>
+
+</html>
